@@ -1,0 +1,168 @@
+\name{plotJagsMix}
+\alias{plotJagsMix}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{ ~~function to do ... ~~ }
+\description{
+  ~~ A concise (1-5 lines) description of what the function does. ~~
+}
+\usage{
+plotJagsMix(seg.ratio, summary.mixture, ylim = NULL, NCLASS = 100, n.seq = 100, main = "", ylab = "Frequency", xlab = "Segregation Ratio", type.plot = c("logit", "raw"), warnings = FALSE, ...)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{seg.ratio}{ ~~Describe \code{seg.ratio} here~~ }
+  \item{summary.mixture}{ ~~Describe \code{summary.mixture} here~~ }
+  \item{ylim}{ ~~Describe \code{ylim} here~~ }
+  \item{NCLASS}{ ~~Describe \code{NCLASS} here~~ }
+  \item{n.seq}{ ~~Describe \code{n.seq} here~~ }
+  \item{main}{ ~~Describe \code{main} here~~ }
+  \item{ylab}{ ~~Describe \code{ylab} here~~ }
+  \item{xlab}{ ~~Describe \code{xlab} here~~ }
+  \item{type.plot}{ ~~Describe \code{type.plot} here~~ }
+  \item{warnings}{ ~~Describe \code{warnings} here~~ }
+  \item{\dots}{ ~~Describe \code{\dots} here~~ }
+}
+\details{
+  ~~ If necessary, more details than the description above ~~
+}
+\value{
+  ~Describe the value returned
+  If it is a LIST, use
+  \item{comp1 }{Description of 'comp1'}
+  \item{comp2 }{Description of 'comp2'}
+  ...
+}
+\references{ ~put references to the literature/web site here ~ }
+\author{ ~~who you are~~ }
+\note{ ~~further notes~~ 
+
+ ~Make other sections like Warning with \section{Warning }{....} ~
+}
+\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function(seg.ratio, summary.mixture, ylim=NULL,
+           NCLASS=100, n.seq=100, main="", ylab="Frequency",
+           xlab="Segregation Ratio", type.plot=c("logit","raw"),
+           warnings=FALSE, ...)
+{
+  ## Purpose: plot out histogram of observed segregation ratios on
+  ##          untransformed scale along with scaled density of fitted
+  ##          components corresponding to dosage classes which were fitted
+  ##          on logit scale
+  ##          NB: segregation ratios plotted in interval (0,1)
+
+  ## Arguments:
+  ## seg.ratio:       segregation ratios
+  ##           NB: this is plotted on the x-axis so should be renamed somehow
+  ## mcmc.mixture:  mcmc summary data produce by 'readJagsMix'
+  ## n.seq:    number of points to use for plotting fitted mixture
+  ##           distribution
+  ## NCLASS:   number of classes for histogram
+  ## main:     title for plot
+  ## ylab:     y-axis label
+  ## xlab:     x-axis label
+  ## type.plot=c("logit","raw")
+  ## warnings=FALSE
+
+  cat("Warning: This procedure needs improving:\n",
+      "consider 'plotLogitMix' for trellis plot\n")
+  
+  if (class(seg.ratio) != "segRatio") {
+    stop("'seg.ratio' must be of class 'segRatio'")
+  }
+
+  if (class(summary.mixture) != "summarySegratioMCMC")
+    stop("'summary.mixture' must be of class 'summarySegratioMCMC'")
+
+  type <- match.arg(type.plot)
+  
+  var.names <- rownames(summary.mixture$statistics)
+  
+  eta <- summary.mixture$statistics[grep("P\\[",var.names), "Mean"]
+  if (warnings) {
+    cat("P:\n")
+    print(eta)
+  }
+  mu <-  summary.mixture$statistics[grep("mu\\[",var.names), "Mean"]
+  sigma <-  summary.mixture$statistics[grep("sigma\\[",var.names), "Mean"]
+
+  if (length(sigma)==1) {  # remember to put common variance in as model setup
+    if (warnings) cat("Common variances assumed\n")
+    sigma <- rep(sigma,length(eta))
+  } else {
+    if (warnings) cat("Common variances not assumed\n")
+  }
+
+  if (type=="raw") {
+    ## set up x's on p scale
+    cat("Warning: experimental plot - fitted densities not well defined\n")
+    y <- seg.ratio$seg.ratio
+    seq.pbin <- seq(min(y),0.99,length.out=n.seq)
+    if (length(ylim)!=2)
+      ylim <- c(min(seq.pbin),max(seq.pbin))
+    seq.mids <- seq.pbin[-length(seq.pbin)] + diff(seq.pbin)/2  # mid points
+    fitted.dens <- matrix(0,ncol=length(eta),nrow=length(seq.mids))
+    x <- hist(y, breaks=seq.pbin, main=main, ylab=ylab, xlab=xlab, ...)
+
+##      test <-  histogram(y, nint=NCLASS)
+##  width <- test$panel.args.common$breaks[2]-test$panel.args.common$breaks[1]
+##  MULT <- width*test$packet.sizes
+
+##    width <- x$breaks[2] - x$breaks[1]
+    
+##    Sum.density <- sum(x$density)   #   scale by this to account for hist area
+##    MULT <- Sum.density
+
+##    MULT <- sum(x$counts)/(x$breaks[length(x$breaks)]-x$breaks[1])
+                                        #sum(x$density)/width # * width
+##    MULT <- 1/(sum(x$density) * width)
+    MULT <- sum(x$density)/(x$breaks[length(x$breaks)]-x$breaks[1])
+    
+    for (kk in 1:length(eta)){
+      fitted.dens[,kk] = dnorm(gtools::logit(seq.mids),
+                   mean=mu[kk], sd=sigma[kk])
+      ##cat("Check: Sum of density:",kk,"is",
+      ##    sum(fitted.dens[,kk]*diff(logit(seq.pbin))),"\n")
+      ##cat("Sum of uncorrected density",kk,":", sum( fitted.dens[,kk]),"\n")
+      ##cat("Normalising constant",kk,";",
+      const <- sum(fitted.dens[,kk]*diff(seq.pbin)) ##,"\n")
+      lines(x=seq.mids, lty=kk, y=MULT*const*eta[kk]*fitted.dens[,kk])
+      ####lines(x=seq.mids, lty=kk, y=MULT*eta[kk]*fitted.dens[,kk])
+    }
+  }
+
+  if (type=="logit") {
+    ## set up x/y on logit scale
+    y <- gtools::logit(seg.ratio$seg.ratio)
+    if (length(ylim)!=2)
+      ylim <- c(min(y),max(y))
+
+    ## set up xlab
+    xlab <- paste("logit(",xlab,")", sep="")
+    x <- hist(y, nclass=NCLASS, main=main, ylab=ylab, xlab=xlab, ...)
+    ##N <- sum(x$counts)              # no. observations
+##    width <- x$breaks[2]-x$breaks[1]
+    ## MULT <- width*N
+    MULT <- sum(x$density)#/width)*
+##      NCLASS*(x$breaks[length(x$breaks)]-x$breaks[1])
+##    MULT <- 1/(sum(x$counts)*width)
+    logit.seq <- seq(ylim[1],ylim[2],length.out=n.seq)
+    
+    for (kk in 1:length(eta)){
+      lines(x=logit.seq, lty=kk,
+            y=MULT*eta[kk]*dnorm(logit.seq, mean=mu[kk], sd=sigma[kk]),
+            lwd=fitted.lwd, col=fitted.col)
+    }
+  }
+  
+  }
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

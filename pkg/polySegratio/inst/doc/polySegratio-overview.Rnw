@@ -1,0 +1,435 @@
+%\VignetteIndexEntry{polySegratio}
+%\VignetteDepends{polySegratio}
+%\VignetteKeywords{polyploids,segregation ratio}
+%\VignettePackage{polySegratio}
+
+\documentclass[a4paper]{article}
+
+%\VignetteIndexEntry{polySegratio overview}
+%\VignettePackage{polySegratio}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+%%%\usepackage{palatino}
+
+\usepackage[T1]{fontenc}
+\usepackage[sc]{mathpazo}
+\linespread{1.05}         % Palatino needs more leading (space between lines)
+
+
+\usepackage[round]{natbib}
+\usepackage{graphicx}
+\usepackage{url}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\#1}}
+\fancyhead{}
+\lhead{polySegratio}
+%%%\rhead{\date{\today}}
+\rhead{\date{January 9, 2008}}
+\cfoot{R library for autopolyploid segregation analysis}
+\lfoot{}
+\rfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\title{polySegratio: An R library for autopolyploid segregation analysis}
+\author{Peter Baker}
+\date{January 9, 2008}
+
+\begin{document}
+
+\maketitle
+
+\SweaveOpts{prefix.string=tmp/tmp}
+
+It is well known that the dosage level of markers in autopolyploids
+and allopolyploids can be characterised by their observed segregation
+ratios. On the other hand, contrary to methods employed in several
+studies, segregation ratios are not a good indicator of polyploid type
+\citep{qu02b}.
+
+The \texttt{polySegratio} package provides standard approaches to
+assess marker dosage in autopolyploids although the functions could
+equally well be applied to allopolyploids with specified expected
+segregation ratios. In addition, simulated sets of markers may be
+generated with specified dosages, ploidy and levels of oversidpersion.
+
+To use the library, you need to attach it with
+<<>>=
+library(polySegratio)
+@ 
+
+<<echo=FALSE>>=
+op <- options()
+options(width=70, digits=4)
+@ 
+
+\section{Expected segregation ratios}
+\label{sec:expected-segratios}
+
+\cite{haldane30} outlined the derivation of the expected numbers and
+ratios of offspring for various parental configurations of
+autopolyploids. Expected gametic series for polyploids of various
+sizes were produced, along with expected ratios of gametic series for
+crosses and selfing and the equilibrium distribution under random
+mating. \citeauthor{haldane30} provides expected gametic series when
+one parent is nulliplex for polyploids up to order 16
+(heccaidecaploid).
+
+\begin{table}[htbp]
+  \begin{center}
+    \caption {The gametic segregation in an autooctaploid of a
+      heterozygous cross $(A^sa^{8-s}, s=1\ldots7)$ with a nulliplex
+      $(a^8)$ assuming bivalent pairing and no double reduction.  The
+      ratio is of dominants to recessives and $\omega_k$ is the proportion of
+      dominants.}
+    \begin{tabular}{|l|ccccc|r@{:}lc|} \hline
+      Heterozygous     & \multicolumn{5}{c|}{Gametes} &
+           \multicolumn{3}{c|}{Segregation Ratio}\\
+      Parent  &   $A^4$ & $A^3a$ & $A^2a^2$ & $Aa^3$ & $a^4$ &
+                  $A^sa^{8-s}$ & $a^8$ & $\omega_k$ \\ \hline
+      $Aa^7$ &   &   &   & 1 & 1 & 1&1 & 0.500      \\
+      $A^2a^6$  & & & 3 & 8 & 3 & 11&3 & 0.786       \\
+      $A^3a^5$  & & 1& 6& 6& 1 & 13&1  & 0.929       \\
+      $A^4a^4$ & 1 & 16 & 36 & 16 & 1  & 69&1 & 0.986  \\
+      $A^5a^3$ & 1 & 6 & 6 & 1 & & \multicolumn{2}{c}{ }&\\
+      $A^6a^2$ & 3 & 8 & 3 &   & &   \multicolumn{2}{c}{ }& \\
+      $A^7a$ & 1 & 1 &   &   &  &  \multicolumn{2}{c}{ }& \\
+\hline  \end{tabular}
+    \label{tab:seg-ratio-1}
+  \end{center}
+\end{table}
+
+For an autooctaploid with bivalent pairing and in the absence of
+double reduction \footnote{Double reduction: if separation for any
+  locus is equational the two chromatids from one chromosome may be
+  present together in one interphase nucleus but joined to separate
+  centromeres allowing them to enter the same gamete. Sister
+  chromatids in the same gamete, reducing the genetic content of a
+  gamete twice, instead of once. Normally, two of the four chromosomes
+  end up together in a gamete, reducing the genetic content in
+  half. With double reduction gametes, the two chromosomes in the
+  gamete are the same, at least at some loci; i.e., they are sister
+  chromatids, and genetic content is reduced to 1/4 when compared to the
+  parental plant. See \cite{mather36}} with $A$ being the dominant
+allele and $a$ the recessive, then the expected gametic series formed
+are outlined in Table~\ref{tab:seg-ratio-1}. Employing the notation
+that $A^s$ represents $s$ copies of allele $A$, then if a heterozygous
+parent $A^ra^{8-r}$ is crossed with a recessive nulliplex ($a^8$)
+octaploid then the results of crossing can be calculated by symbolic
+manipulation. For instance, if a parent with a single dose marker
+$Aa^7$ is crossed with a nulliplex parent $a^8$ then $Aa^7 \times a^8$
+yields $(1.Aa^3 + 1.a^4) \times (a^4)$ or zygotes $(1.Aa^7 + 1.a^8)$
+with ratios $1.Aa^7 : 1.a^8$.
+
+
+Although published previously in slightly different forms, the general
+formula of \cite{ripol99} is employed for $p(k)$ or the expected
+segregation proportion given dosage $k$ which is
+\begin{equation}
+  \label{eq:ripol1}
+ p(k| m, x) = 1 - {{m-k \choose mx} \over {m \choose mx}} , k=0 \ldots m/2
+\end{equation}
+where $m$ is the ploidy level or number of homologous chromosomes and
+the monoploid number $x$ is the number of chromosomes in a basic
+set. Note that for diploids $m=2$, tetraploids $m=4$ , octaploids then
+$m=8$ and so on.
+
+To obtain such theoretical segregation proportions or probabilities
+using \texttt{expected.segRatio} is straightforward by specifying the
+ploidy level either numerically or by name. The function
+\texttt{expected.segRatio} employs Equations~\ref{eq:ripol1} and
+\ref{eq:homog} to compute expected segregation proportions. For
+instance
+<<>>=
+## obtain expected segregation ratios
+##  default is one nulliplex parent so type.parents="heterogeneous"
+
+print(unlist(expected.segRatio(2)))
+print(unlist(expected.segRatio("Tetraploid")))
+print(expected.segRatio("Octa")$ratio)
+@ 
+
+In the case where, an AFLP band is present in both parents but not in
+all offspring, there must be less than four copies of the dominant
+allele in both parents. For instance, crossing the two genetically
+similar autooctoploid lines $Aa^7$ results in 1 nulliplex in 4 since
+$(1.Aa^3 + 1.a^4)^2$ is simply $(1.A^2a^6 + 2.Aa^7 + 1.a^8)$.  For
+alternate autooctoploid parental configurations result in segregation
+proportions of around 0.9 or above and would apparently therefore be
+indistinguishable via segregation ratios alone. Similarly to
+Equation~\ref{eq:ripol1} we deduce that if both parents contain at
+least one copy of the dominant marker than a general equation for then
+for the dosage $j$ in the first parent and dosage $k$ in the second
+parent then the expected segregation proportion $p(j,k)$ is
+\begin{equation}
+  \label{eq:homog}
+  p(j, k | m, x) = 1 - { {m-k \choose mx}  {m-j \choose mx} \over 
+                       {m \choose mx}^2 }, j,k=0 \ldots m/2
+\end{equation}
+where $m$ and $x$ are defined in Equation~\ref{eq:ripol1}, noting that
+neither parent is nulliplex. Such segregation ratios may be computed
+using \texttt{expected.segRatio} as follows:
+<<>>=
+## obtain expected segregation ratios with type.parents="homozygous"
+
+print(unlist(expected.segRatio("tetra",type="homoz")))
+print(expected.segRatio("Octa",type="homoz")$ratio)
+@ 
+
+Note that Equations~\ref{eq:ripol1} and \ref{eq:homog} are defined for
+$m$ even but that a warning is issued and results still calculated if
+$m$ is odd. As an example
+<<>>=
+## obtain expected segregation ratios with odd ploidy level
+a <- expected.segRatio(9)
+print(a$ratio)
+@ 
+
+\section{Simulating a set of markers}
+\label{sec:simulate}
+
+Functions \texttt{sim.autoMarkers} and \texttt{sim.autoCross} may be
+used to simulate marker data for a collection of markers where either
+one of the parents is nulliplex or where both parents contain at least
+one dose of a marker. The data are only simulated to produce
+appropriate segregation ratios but other genetic parameters such as
+recombination, degree of preferential pairing or a genetic map are not
+considered. The proportions in each marker dosage need to be
+specified.
+
+\texttt{sim.autoMarkers} may be used to simulate dominant markers from
+an autopolyploid cross given the ploidy level, specified parental
+marker alleles, the expected segregation ratios and the proportions in
+each dosage marker class. The ploidy level may be chosen from
+tetraploid to heccaidecaploid and the segregation ratios may be
+specified explicitly or generated automatically.
+
+\texttt{sim.autoCross} is a wrapper to \texttt{sim.autoMarkers} which
+is used to generate markers for parents with markers that are 10, 01
+or 11. The proportions of markers for each of these three parental
+types must be specified.
+
+Both functions return S3 class objects (class \texttt{simAutoCross}
+and class \texttt{simAutoMarkers}) which have associated print and
+plot methods.
+
+For instance, to generate and plot the segregation proportions for 200
+markers for 100 progeny from a tetraploid cross where one of the
+parents is nulliplex and there are 70\% single dose markers and 30\%
+dose markers then use
+<<>>=
+mark.sim4 <- sim.autoMarkers(4, dose.proportion=c(0.7,0.3), 
+                             n.markers=200, n.individuals = 200)
+print(mark.sim4)
+@
+
+\begin{figure} [ht]
+\begin{center}
+<<fig=TRUE>>=
+plot(mark.sim4)
+@
+\caption{Segregation ratios from simulated marker data for 200 markers
+  for a autotetraploid cross with 100 offspring}
+\label{fig:sim1}
+\end{center}
+\end{figure}
+
+Figure~\ref{fig:sim1} shows a histogram of segregation proportions for
+a tetraploid cross. Other plots, may be produced. For instance, the
+number of missing values is useful when looking at real data to
+determine if some markers are not well measured (See Figure~\ref{fig:sim2}).
+
+Often in molecular marker studies, a small percentage of markers may
+be missing or misclassified. The functions \texttt{addMissing} and
+\texttt{addMisclass} allow marker data to be modified accordingly. The
+rate may be specified either as a proportion of missing at random or a
+proportion of columns and rows with specified proportions of missings
+or misclassified. Not that if markers are randomly misclassified then
+the expected segregations ratios are still the same and so we may not
+expect to see much difference to perfectly classified markers.
+
+\texttt{addMissing} adds missing data at random to objects of class
+\texttt{autoMarker} or \texttt{autoCross}. \texttt{addMisclass}
+misclassifies marker data in objects of class \texttt{autoMarker} or
+\texttt{autoCross} at a specified rate. Parental marker data may also
+be misclassified. An example might be
+<<>>=
+miss.sim4 <- addMisclass(mark.sim4, misclass = 0.1)
+miss.sim4 <- addMissing(miss.sim4, na.proportion = 0.2)
+print(miss.sim4, col=c(1:6))
+@
+
+\begin{figure} [ht]
+\begin{center}
+<<fig=TRUE>>=
+plot(miss.sim4, type="all")
+@
+\caption{Histograms of the number of markers labelled 1, numbers of
+  missing values per marker and segregation ratios}
+\label{fig:sim2}
+\end{center}
+\end{figure}
+
+\subsection{Overdispersion}
+\label{sec:overdispersion}
+
+Since markers are correlated and may be subject to different types of
+measurement errors, then the segregation ratios may follow an
+overdispersed Binomial distribution. Such markers may be simulated
+with \texttt{sim.autoMarkers} by setting the parameter
+\texttt{overdispersion} to \texttt{TRUE}. The amount of overdispersion
+or extra--binomial variation may be specified by setting the
+\texttt{shape1} parameter. Larger values imply less
+overdispersion. Typically, the \texttt{R} command would be like
+\texttt{sim.autoMarkers(4,c(0.8,0.2), overdisp=TRUE, shape1=20)}
+
+Overdispersed marker data are simulated from the Beta--Binomial
+distribution where the Binomial proportion $p$ is generated from a
+Beta distribution. Note that if $p$ is generated from a $\beta(a,b)$
+distribution, then $E(p)=a/(a+b)$ and
+Var$(p)=ab/((a+b)^2(a+b+1))$. Thus constraining $E(p)$ to be the
+appropriate segregation proportion and setting the first shape
+parameter $a$ implies that $b = a(1-p)/p$. Tetraploid marker data
+generated for a range of \texttt{shape1} or $a$ values is shown in
+Figure~\ref{fig:overdisp1}.
+
+\begin{figure} [htb]
+\begin{center}
+<<fig=TRUE, echo=FALSE>>=
+op <- par(mfrow = c(2, 2))	
+cmain <- 1.7
+plot(sim.autoMarkers(4,c(0.8,0.2)), main="No overdispersion", cex.main=cmain)
+plot(sim.autoMarkers(4,c(0.8,0.2), overdisp=TRUE), main="Shape1 = 50", cex.main=cmain)
+plot(sim.autoMarkers(4,c(0.8,0.2), overdisp=TRUE, shape1=15), 
+     main="Shape1 = 15", cex.main=cmain)
+plot(sim.autoMarkers(4,c(0.8,0.2), overdisp=TRUE, shape1=5), 
+     main="Shape1 = 5", cex.main=cmain)
+par(op)
+@
+\caption{Histograms of the number of dominant markers simulated for
+  500 overdispersed markers from 200 autotetraploids. Data were
+  generated from the Beta--Binomial distribution with a range of shape
+  parameters. Overdispersion increases as \texttt{shape1} decreases.}
+\label{fig:overdisp1}
+\end{center}
+\end{figure}
+
+\section{Standard approaches for assessing marker dosage}
+\label{sec:tests}
+
+The most widely used test for assessing marker dosage is the standard
+$\chi^2$ test. Following \cite{mather51}, this test is often employed
+to compare the observed segregation ratio against its expected
+value. More recently, \cite{ripol99} proposed that the observed
+segregation proportion be compared to the appropriate Binomial
+confidence interval given the sample size and the expected segregation
+proportion.
+
+Both tests may be carried out by means of the function
+\texttt{test.segRatio}. Note that if the tests reveal that a marker
+may be more than one dosage then it is not allocated a marker dosage.
+
+\subsection{$\chi^2$ tests}
+\label{sec:chisq}
+
+The default method of assessing marker dosage in
+\texttt{test.segRatio} is the $\chi^2$ test. The function requires
+that the segregation proportions are given in the form of object of S3
+class \texttt{segRatio}. These are automatically produced for
+simulated data created with functions \texttt{sim.autoMarkers} and
+\texttt{sim.autoCross} and may be calculated from observed marker data
+either manually or by applying \texttt{segregationRatios} to a matrix
+of observed marker data.
+
+For instance, to calculate $\chi^2$ tests and allocate dosage for an
+autooctoploid then
+<<>>=
+## simulated data
+a <- sim.autoMarkers(ploidy = 8, c(0.7,0.2,0.09,0.01), n.markers=200, 
+                     n.individuals=100)
+print(a)
+@ 
+Note that \texttt{a} is an object of S3 class
+\texttt{simAutoMarkers} and that the segregation ratios may be
+obtained as the list component \texttt{seg.ratios}. Since \texttt{a}
+is simulated we can also extract the true dosage obtain the number of
+correctly classified markers.
+<<>>=
+## summarise chi-squared test vs true
+ac <- test.segRatio(a$seg.ratios, ploidy=8, method="chi.squared")
+print(ac)
+print(addmargins(table(a$true.doses$dosage, ac$dosage, exclude=NULL)))
+@ 
+
+Note that for segregation ratios near to one the $\chi^2$
+approximation may not hold and so \texttt{R} will produce a warning.
+
+\subsection{Binomial confidence intervals}
+\label{sec:binomial}
+
+The Binomial confidence interval approach of \cite{ripol99} is
+obtained by setting the \texttt{method} parameter to
+``\texttt{binomial}''. The $\alpha$ level may be set in either method
+by setting the parameter \texttt{alpha}. For instance, 
+<<>>=
+## summarise binomial CI vs true
+ab <- test.segRatio(a$seg.ratios, ploidy=8, method="bin", alpha=0.01)
+print(ab)
+print(addmargins(table(a$true.doses$dosage, ab$dosage, exclude=NULL)))
+@ 
+
+\section{Utility functions}
+\label{sec:util}
+
+Several utility functions are included for use with real or simulated
+data.
+
+When marker data are stored in spreadsheets repetitive parts of marker
+names may be left blank or columns containing parts of names may need
+to be combined. To aid the process of constructing unique marker
+labels, \texttt{autoFill} automatically fills out blanks of a vector
+with the preceding label and \texttt{makeLabel} generates labels from
+two columns where blanks in first column are replaced by preceding
+non-blank label.
+
+<<>>=
+## imaginary data frame representing ceq marker names read in from
+## spreadsheet
+x <- data.frame( col1 = c("agc","","","","gct5","","ccc","",""),
+                col2 = c(1,3,4,5,1,2,2,4,6))
+print(x)
+print(makeLabel(x))
+print(cbind(x,lab=makeLabel(x, sep=".")))
+@ 
+
+\texttt{divide.autoMarkers} will split up a set of markers depending on
+the parental alleles. This is useful when extracting markers to be
+used in constructing a marker map for one parent say or in obtaining
+those markers present in both parents but segregating in the
+offspring.
+
+<<>>=
+p2 <- sim.autoCross(4,
+dose.proportion=list(p01=c(0.7,0.3),p10=c(0.7,0.3),
+                     p11=c(0.6,0.2,0.2)))
+print(p2, row=c(1:5))
+
+ss <- divide.autoMarkers(p2$markers)
+
+print(ss, row=c(1:5))
+@ 
+
+\bibliographystyle{apalike}
+%%\bibliography{polyploid,qtl,Mybooks2-stat,thesis-eqtl,genomic,thesis}%,my_mcmc} % just include bibfile here
+\bibliography{polySeg}
+
+\subsection{Acknowledgments}
+\label{sec:acknowledgments}
+
+Karen Aitken, given her experience in tetraploids and sugarcane marker
+maps, has provided many valuable insights into marker dosage in
+autopolyploids. David Lovell, Andrew George and Phil Jackson provided
+useful comments and discussions.
+
+\end{document}

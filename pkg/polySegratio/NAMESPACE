@@ -1,0 +1,3 @@
+export(addMisclass,addMissing,autoFill,expected.segRatio,makeLabel,plot.segRatio,plot.simAutoCross,plot.simAutoMarkers,print.segRatio,print.simAutoCross,print.simAutoMarkers,print.divideAutoMarkers,print.testSegRatio,segregationRatios,sim.autoCross,sim.autoMarkers,divide.autoMarkers,test.segRatio)
+#S3method(print, segRatio)
+#S3method(print, testSegRatio)
