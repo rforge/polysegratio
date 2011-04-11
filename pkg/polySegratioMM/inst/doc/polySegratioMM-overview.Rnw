@@ -48,16 +48,16 @@ these methods could equally well be applied to allopolyploids with
 specified expected segregation ratios. For details see
 \texttt{polySegratio}.
 
-A Bayesian approach to marker dosage estimation was proposed by Baker
-et al SUBMITTED whereby all markers are fitting a finite mixture
+A Bayesian approach was proposed by \cite{baker2010} where marker
+dosage estimation was obtained by fitting a finite mixture
 distribution.
 
 This library calls the \texttt{JAGS} software for Bayesian
 calculation. \texttt{JAGS 1.0} or higher must be installed following
 instructions from \url{http://www-fis.iarc.fr/~martyn/software/jags/}.
-\texttt{JAGS} must be installed and the executable must be in your
-path. Note that no checking is carried out to asecrtain whether or not
-\texttt{JAGS} is set up appropriately.
+The \texttt{JAGS} executable must be in your path. Currently, no
+checking is carried out to ascertain whether or not \texttt{JAGS} is
+set up appropriately.
 
 To use the library, you need to attach it with
 <<>>=
@@ -174,7 +174,7 @@ print(plotTheoretical(ploidy.level=6, seg.ratios=sr.overdisp, main="",
 The histogram of marker segregation ratios, which is a useful
 graphical method for identifying overdispersion or outliers, is seen
 in Figure~\ref{fig:sim2}. Note that, due to overdispersion the
-theoretical distribution is narrow than the observed data.
+theoretical distribution is narrower than the observed data.
 
 \section{A Bayesian mixture model approach}
 \label{sec:mix-model}
@@ -249,7 +249,7 @@ parameters mean $\mu_k$ and variance $\sigma^2_k =\tau_k^{-1}$.
 Simulation studies suggested that incorporating strong prior
 information, such as the expected distributions of \cite{haldane30}
 provided the best method of allocating dosage. Further details may be
-found in Baker, et al SUBMITTED
+found in \cite{baker2010}.
 
 \section{Specifying  a model}
 \label{sec:model-spec}
@@ -300,8 +300,8 @@ data(mcmcHexRun)
 To run \texttt{JAGS} without producing plots then set the
 \texttt{plots} option to \texttt{FALSE}. For the overdispersed data
 running this command produced the following selected output. While
-seleceted output is printed here the simple command
-\texttt{print(mcmcHexRun)} whould producethe following output and
+selected output is printed here the simple command
+\texttt{print(mcmcHexRun)} whould produce the following output and
 more.
 
 The summary of processing times:
@@ -316,8 +316,8 @@ print(mcmcHexRun$summary)
 
 Note that MCMC convergence diagnostic output is produced
 automatically. Assessing convergence is crucial in MCMC and poor
-convergence may result in mis--allocated marker doages. The diagnostic
-statistics indicate that convergence was acheived.
+convergence may result in mis--allocated marker dosages. The diagnostic
+statistics indicate that convergence was achieved.
 <<>>=
 print(mcmcHexRun$diagnostics)
 @ 
@@ -345,7 +345,7 @@ for the overdispersed data.}
 \end{center}
 \end{figure}
 
-When \texttt{plots} option of \texttt{runSegratioMM} is set to the
+When the \texttt{plots} option of \texttt{runSegratioMM} is set to the
 default value of \texttt{TRUE}, numerous plots are produced including
 trace and density plots from the \texttt{CODA} package. These may also
 be extracted manually but the process is somewhat more
