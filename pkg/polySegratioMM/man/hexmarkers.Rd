@@ -12,6 +12,7 @@
   simulated dominant markers for 200 auto--hexaploid individuals.}
 %%\source{}
 \references{
+  
   Haldane, J B S. 1930. Theoretical genetics of autopolyploids.
   \emph{Journal of Genetics} 22: 359-372.
   

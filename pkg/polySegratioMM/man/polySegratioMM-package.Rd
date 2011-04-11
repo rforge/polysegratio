@@ -20,8 +20,8 @@ Marker dosage for autoployploids by Bayesian mixture models
   \tabular{ll}{
 Package: \tab polySegratioMM\cr
 Type: \tab Package\cr
-Version: \tab 0.5-2\cr
-Date: \tab 2009-11-18\cr
+Version: \tab 0.6-1\cr
+Date: \tab 2001-04-11\cr
 License: \tab  GPL-3
 }
 
@@ -67,18 +67,21 @@ segregation ratios and fitted mixture model on the logit scale.
 \author{Peter Baker \email{p.baker1@uq.edu.au}}
 \references{
   \itemize{
-  \item{J B S Haldane}{ (1930) Theoretical genetics of
-    autopolyploids. \emph{Journal of genetics} \bold{22} 359--372}
-  \item{Ripol, M I et al}{(1999) Statistical aspects of genetic mapping in
-    autopolyploids. \emph{Gene} \bold{235} 31--41 }
-  \item{JAGS}{http://www-fis.iarc.fr/~martyn/software/jags/ and
-    http://streaming.stat.iastate.edu/wiki/index.php/JAGS\_Guide}
+    \item{Baker P, Jackson P, and Aitken K.}{ (2010) Bayesian estimation
+      of marker dosage in sugarcane and other autopolyploids.
+      \emph{TAG Theoretical and Applied Genetics} \bold{120} (8): 1653-1672.}
+    \item{J B S Haldane } { (1930) Theoretical genetics of
+      autopolyploids. \emph{Journal of genetics} \bold{22} 359--372}
+    \item{Ripol, M I et al } { (1999) Statistical aspects of genetic mapping in
+      autopolyploids. \emph{Gene} \bold{235} 31--41 }
+    \item{JAGS} { \url{http://www-fis.iarc.fr/~martyn/software/jags/} and
+      \url{http://streaming.stat.iastate.edu/wiki/index.php/JAGS\_Guide}}
   }
 }
 \examples{
 ## simulate small autooctaploid data set of 100 markers for 50 individuals
 ## with \%70 Single, \%20 Double and \%10 Triple Dose markers 
-a1 <- sim.autoMarkers(8,c(0.7,0.2,0.1),n.markers=100,n.individuals=75)
+a1 <- sim.autoMarkers(8,c(0.7,0.2,0.1),n.markers=400,n.individuals=275)
 ##print(a1)
 sr <-  segregationRatios(a1$markers)
 x <- setModel(3,8)  # autooctapolid mode with 3 components
@@ -87,7 +90,7 @@ x <- setModel(3,8)  # autooctapolid mode with 3 components
 ## fit simple model in one hit with default priors, inits etc
 ## warning: this is too small an MCMC sample so should give inaccurate
 ## answers but it could still take quite a while
-x.run <- runSegratioMM(sr, x, burn.in=200, sample=500)
+x.run <- runSegratioMM(sr, x, burn.in=2000, sample=5000)
 print(x.run)
 
 ## plot observed segregation ratios, fitted model and expected distribution
