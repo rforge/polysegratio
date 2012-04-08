@@ -80,8 +80,8 @@ plotFitted <-
 
   if(theoretical==TRUE) {
     if (class(model)=="modelSegratioMM") {
-      ttt <- plotTheoretical(ploidy=model$E.segRatio$ploidy.level,
-                             n.comp=model$n.components,
+      ttt <- plotTheoretical(ploidy.level=model$E.segRatio$ploidy.level,
+                             n.components=model$n.components,
                              n.individuals=seg.ratios$n.individuals,
                              proportions=eta, xaxis=pl.type)
 

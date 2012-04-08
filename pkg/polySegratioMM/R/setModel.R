@@ -12,7 +12,7 @@ function(n.components, ploidy.level, random.effect=FALSE,
   ## might as well go here
 
   type <- match.arg(type.parents)
-  E.segRatio <- expected.segRatio(ploidy.level, type=type)
+  E.segRatio <- expected.segRatio(ploidy.level, type.parents=type)
 
   if (random.effect & equal.variances)
     warning("Both 'random.effect' and 'equal.variances' set - silly?")
@@ -27,7 +27,7 @@ function(n.components, ploidy.level, random.effect=FALSE,
     }
   }
   
-  E.segRatio <- expected.segRatio(ploidy.level, type=type)
+  E.segRatio <- expected.segRatio(ploidy.level, type.parents=type)
 
   ## set up bugs code
   

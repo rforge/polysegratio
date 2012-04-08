@@ -54,7 +54,7 @@ function(seg.ratios, model, priors=setPriors(model),
     ddd <- "Diagnostics to be run later"
   } else {
     ddd <- diagnosticsJagsMix(read.jags, diagnostics=print.diagnostics,
-                              plot=plot.diagnostics, return.results=TRUE)
+                              plots=plot.diagnostics, return.results=TRUE)
   }
   
   ## summarise parameters

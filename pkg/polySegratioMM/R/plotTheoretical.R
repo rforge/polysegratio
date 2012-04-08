@@ -53,7 +53,7 @@ plotTheoretical <-
   }
   
   if (length(expected.segratio) == 0) {
-    E.segRatio <- expected.segRatio(ploidy.level, type=type)
+    E.segRatio <- expected.segRatio(ploidy.level, type.parents=type)
   } else {
     E.segRatio$ratio <- expected.segratio
   }
