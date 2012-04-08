@@ -1,1 +1,7 @@
 export(diagnosticsJagsMix,DistributionPlotBinomial,DistributionPlotGamma,DistributionPlotNorm,dosagesJagsMix,dumpData,dumpInits,plotFitted,plot.runJagsWrapper,plot.segratioMCMC,plotTheoretical,print.dosagesMCMC,print.runJags,print.runJagsWrapper,print.segratioMCMC,readJags,runJags,runSegratioMM,setControl,setInits,setModel,setPriors,summary.segratioMCMC,writeControlFile,writeJagsFile,calculateDIC)
+S3method(print, dosagesMCMC)
+S3method(print, runJags)
+S3method(print, runJagsWrapper)
+S3method(print, segratioMCMC)
+S3method(plot, segratioMCMC)
+S3method(summary, segratioMCMC)

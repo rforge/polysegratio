@@ -7,7 +7,7 @@
   parameters and posterior probability distributions for specified markers
 }
 \usage{
-plot.segratioMCMC(x, ..., row.index = c(1:10), var.index = c(1:6),
+\method{plot}{segratioMCMC}(x, ..., row.index = c(1:10), var.index = c(1:6),
 marker.index = c(1:8))
 }
 %- maybe also 'usage' for other objects documented here.

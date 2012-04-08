@@ -15,7 +15,6 @@
 \usage{mcmcHexRun}
 \format{An object of S3 class \code{runJagsWrapper} with various
   components including summaries and diagnostics.}
-\source{}
 \references{
   Baker P, Jackson P, and Aitken K. 2010. Bayesian estimation of marker
   dosage in sugarcane and other autopolyploids. \emph{TAG Theoretical and
