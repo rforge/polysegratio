@@ -20,8 +20,8 @@ Marker dosage for autoployploids by Bayesian mixture models
   \tabular{ll}{
 Package: \tab polySegratioMM\cr
 Type: \tab Package\cr
-Version: \tab 0.6-1\cr
-Date: \tab 2001-04-11\cr
+Version: \tab 0.6-2\cr
+Date: \tab 2012-04-10\cr
 License: \tab  GPL-3
 }
 
