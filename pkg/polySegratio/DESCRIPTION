@@ -1,8 +1,8 @@
 Package: polySegratio
 Type: Package
 Title: Simulate and test marker dosage for dominant markers in autopolyploids
-Version: 0.2-3
-Date: 2010-01-21
+Version: 0.2-4
+Date: 2014-02-06
 Depends: gdata
 Author: Peter Baker
 Maintainer: Peter Baker <p.baker1@uq.edu.au>

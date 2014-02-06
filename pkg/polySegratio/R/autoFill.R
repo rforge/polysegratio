@@ -9,7 +9,7 @@ function(x, squash=FALSE)
   ## squash: remove spaces from labels (default: TRUE)
   ## NB: NO ERROR CHECKING SO BE CAREFUL
 
-  require("gdata")
+  ## require("gdata")  # obsolete in current R as in Depends
   
   ## set NA's to "" otherwise a problem
   if (is.factor(x))

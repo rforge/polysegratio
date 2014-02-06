@@ -28,7 +28,7 @@ overdispersion=FALSE, shape1=50, seed)
   \item{n.markers}{ number of markers (Default: 500)}
   \item{n.individuals}{ number of individuals in the cross (Default: 200)}
   \item{seg.ratios}{ numeric vector containing segregation proportion to
-    be supplied if you wish to overide automatic calculations using
+    be supplied if you wish to override automatic calculations using
     ploidy.level}
   \item{no.dosage.classes}{only generate markers for the first
     \code{no.dosage.classes} classes (if set)}
@@ -50,7 +50,7 @@ overdispersion=FALSE, shape1=50, seed)
   Returns an object of class \code{\link{simAutoMarkers}} containing
   \item{markers}{ matrix of 0,1 dominant markers with individuals as cols and
     rows as markers}
-  \item{E.segRatio}{expected segregation porportions, list with
+  \item{E.segRatio}{expected segregation proportions, list with
     components
     \itemize{
       \item{\code{ratio}}{segregation proportions,}
@@ -77,7 +77,7 @@ overdispersion=FALSE, shape1=50, seed)
   \item{overdispersion}{either a list with components 'overdispersion':
     logical for whether overdispersion is set or not and if TRUE then
     two extra components 'shape1' and 'shape2' contain parameters for
-    the beta distrubution employed to generate Binomial probabilities}
+    the beta distribution employed to generate Binomial probabilities}
   \item{call}{matches arguments when function called}
 }
 \author{Peter Baker \email{p.baker1@uq.edu.au}}
@@ -99,7 +99,7 @@ a1 <- sim.autoMarkers(4,c(0.8,0.2),n.markers=20,n.individuals=10)
 print(a1)
 
 a2 <-
-sim.autoMarkers(8,c(0.7,0.2,0.09,0.01),type="homo",n.markers=20,n.individuals=10)
+sim.autoMarkers(8,c(0.7,0.2,0.09,0.01),type.parents="homo",n.markers=20,n.individuals=10)
 print(a2)
 
 }

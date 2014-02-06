@@ -31,7 +31,7 @@ function(mcmc.mixture, diagnostics=TRUE, plots=FALSE,
   ## autocorr:      if auto.corrs is TRUE return autocorrlations of parameters
   ##                specified by 'index'
 
-  require(coda)
+  ## require(coda) # obsolete for current version of R since in Depends
   
   if ( !( class(mcmc.mixture) == "segratioMCMC" |
        class(mcmc.mixture) == "runJagsWrapper")) 

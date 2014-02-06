@@ -83,7 +83,7 @@ function(ploidy.level, dose.proportion, n.markers=500, n.individuals=200,
   }
   
   type <- match.arg(type.parents)
-  E.segRatio <- expected.segRatio(ploidy.level, type=type)
+  E.segRatio <- expected.segRatio(ploidy.level, type.parents=type)
 
   if (!missing(seg.ratios)){
     E.segRatio$ratio <- seg.ratios

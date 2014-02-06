@@ -4,7 +4,7 @@ function(run.jags, quiet=TRUE, ...)
   ## wrapper to read.openbugs so ... can be used for start, end, thin
   ## returns object of class mcmc.list
   
-  require(coda)
+  ## require(coda) # obsolete in recent versions of R as in Depends
 
   if (class(run.jags) != "runJags")
     stop("'run.jags' must be of class 'runJags'")

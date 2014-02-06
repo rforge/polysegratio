@@ -8,7 +8,7 @@
   using the formula of Ripol et al (1999) based on Haldane (1930) for
   single dose and multiple dose parents cross nulliplex
   ("homozygous") and an unpublished formula where both parents
-  possess at least single dose markers ("heterogenouous") 
+  possess at least single dose markers ("heterogeneous") 
 }
 \usage{
 expected.segRatio(ploidy.level = stop("No ploidy level set"),
@@ -21,9 +21,8 @@ type.parents = c("heterogeneous", "homozygous"))
   \item{type.parents}{ "heterogeneous" if parental markers are 0,1 or
     "homogeneous" if parental markers are both 1}
 }
-\details{
-  
-}
+%%\details{
+%%}
 \value{
   \item{ratio}{vector of proportions for each dosage}
   \item{ploidy.level}{numeric value of ploidy level 2,4,6,8, \dots}
@@ -61,11 +60,11 @@ expected.segRatio(9)
 
 ## homogeneous parents
 
-expected.segRatio("Octa",type="heter")
-expected.segRatio("Octa",type="homo")
-expected.segRatio("tetra",type="homo")
-expected.segRatio(6,type="homo")
-expected.segRatio(9,type="homo")
+expected.segRatio("Octa", type.parents="heter")
+expected.segRatio("Octa", type.parents="homo")
+expected.segRatio("tetra", type.parents="homo")
+expected.segRatio(6, type.parents="homo")
+expected.segRatio(9, type.parents="homo")
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
