@@ -155,7 +155,7 @@ plotTheoretical <-
 
   if (plot.sr) {
     
-    xhist <- histogram(y, nint=NCLASS, xlab=xlab, ylab=ylab,
+    xhist <- lattice::histogram(y, nint=NCLASS, xlab=xlab, ylab=ylab,
                        type="density", col="lightgreen", main=main,
                        par.settings=specific.set,
                        panel = function(x, nint=nint, # main=main,
@@ -173,7 +173,7 @@ plotTheoretical <-
     return(xhist)
   } else {
     
-    dplot <- xyplot( comp.lines[[1]] ~ x.seq, xlim=xlim, type = "l",
+    dplot <- lattice::xyplot( comp.lines[[1]] ~ x.seq, xlim=xlim, type = "l",
                     col = fitted.col, lty=1, lwd = fitted.lwd,
                     ylab=ylab, xlab=xlab, main=main,
                     seq=x.seq, cl=comp.lines, # par.settings=specific.set,

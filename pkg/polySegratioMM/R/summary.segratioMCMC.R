@@ -9,10 +9,10 @@ function(object, ..., row.index=c(1:10),
 
   ## print object summary of type segratioMCMC
   
-  T.index <- grep("T\\[",varnames(object$mcmc.list))         # markers
+  T.index <- grep("T\\[",coda::varnames(object$mcmc.list))         # markers
   T.print <- T.index[marker.index]                      # marker selection
   drop <- T.index
-  b.index <- grep("b\\[",varnames(object$mcmc.list)) # random effects if set
+  b.index <- grep("b\\[",coda::varnames(object$mcmc.list)) # random effects if set
   if (length(b.index>0)){
     b.print <- T.index[marker.index]
     drop <- c(T.index, b.index)

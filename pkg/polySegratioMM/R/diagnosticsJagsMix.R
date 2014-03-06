@@ -45,7 +45,7 @@ function(mcmc.mixture, diagnostics=TRUE, plots=FALSE,
   
   ##cat("Info: Starting raftery.diag in diagnosticsJagsMix\n")
   options(show.error.messages = FALSE)
-  try(res$raftery <- raftery.diag(mcmc.mixture$mcmc.list[,index]), silent=TRUE)
+  try(res$raftery <- coda::raftery.diag(mcmc.mixture$mcmc.list[,index]), silent=TRUE)
   ##cat("Info: Finished raftery.diag in diagnosticsJagsMix\n")
   options(show.error.messages = TRUE)
   if (length(res$raftery)==0)
@@ -54,7 +54,7 @@ function(mcmc.mixture, diagnostics=TRUE, plots=FALSE,
 
   ##cat("Info: Starting geweke.diag in diagnosticsJagsMix\n")
   options(show.error.messages = FALSE)
-  try(res$geweke <- geweke.diag(mcmc.mixture$mcmc.list[,index]), silent=TRUE)
+  try(res$geweke <- coda::geweke.diag(mcmc.mixture$mcmc.list[,index]), silent=TRUE)
   ##cat("Info: Finished geweke.diag in diagnosticsJagsMix\n")
   options(show.error.messages = TRUE)
   if (length(res$geweke)==0)
@@ -64,7 +64,7 @@ function(mcmc.mixture, diagnostics=TRUE, plots=FALSE,
   res$heidel <- NULL
   options(show.error.messages = FALSE)
   ##cat("Info: Starting heidel.diag in diagnosticsJagsMix\n")
-  try(res$heidel <- heidel.diag(mcmc.mixture$mcmc.list[,index]), silent=TRUE)
+  try(res$heidel <- coda::heidel.diag(mcmc.mixture$mcmc.list[,index]), silent=TRUE)
   ##cat("Info: Finished heidel.diag in diagnosticsJagsMix\n")
   options(show.error.messages = TRUE)
   if (length(res$heidel)==0)
@@ -84,7 +84,7 @@ function(mcmc.mixture, diagnostics=TRUE, plots=FALSE,
 
   if(plots) {
     
-    acfplot(mcmc.mixture$mcmc.list[,index])
+    coda::acfplot(mcmc.mixture$mcmc.list[,index])
 
     for (chain in 1:length(mcmc.mixture$mcmc.list)){
       levelplot(mcmc.mixture$mcmc.list[[chain]][,index],
@@ -93,12 +93,12 @@ function(mcmc.mixture, diagnostics=TRUE, plots=FALSE,
 
     qqmath(mcmc.mixture$mcmc.list[,index])
 
-    cumuplot(mcmc.mixture$mcmc.list[,index])
+    coda::cumuplot(mcmc.mixture$mcmc.list[,index])
 
   }
 
   if (trace.plots) {
-    traceplot(mcmc.mixture$mcmc.list[,index])
+    coda::traceplot(mcmc.mixture$mcmc.list[,index])
   }
 
   if (xy.plots) {
@@ -110,7 +110,7 @@ function(mcmc.mixture, diagnostics=TRUE, plots=FALSE,
   }
   
    if(auto.corrs) {
-    print(acorr <- autocorr(mcmc.mixture$mcmc.list[,index]))
+    print(acorr <- coda::autocorr(mcmc.mixture$mcmc.list[,index]))
     if (return.results) res$autocorr <- acorr
   }
   

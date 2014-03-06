@@ -48,7 +48,7 @@ function(mcmc.mixture, jags.control, seg.ratio, chain=1,
   n.comp <- jags.control$model$n.components
   dosage.names <- names(jags.control$model$E.segRatio$ratio)[1:n.comp]
  
-  ind <-  grep("T\\[",varnames(mcmc.mixture$mcmc.list))    # markers
+  ind <-  grep("T\\[",coda::varnames(mcmc.mixture$mcmc.list))    # markers
   n.markers <- length(ind)
   marker.names <- names(seg.ratio$r)
   

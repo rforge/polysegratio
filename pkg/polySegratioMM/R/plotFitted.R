@@ -126,7 +126,7 @@ plotFitted <-
       main=deparse(substitute(seg.ratios)))
   }
   
-  xhist <- histogram(y, nint=NCLASS, main=main, ylab=ylab, xlab=xlab,
+  xhist <- lattice::histogram(y, nint=NCLASS, main=main, ylab=ylab, xlab=xlab,
                      type="density",col=bar.col,
                      par.settings=specific.set,
                      panel = function(x,nint=nint,main=main,ylab=ylab,

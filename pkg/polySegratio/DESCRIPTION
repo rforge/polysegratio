@@ -3,7 +3,7 @@ Type: Package
 Title: Simulate and test marker dosage for dominant markers in autopolyploids
 Version: 0.2-4
 Date: 2014-02-06
-Depends: gdata
+Imports: gdata
 Author: Peter Baker
 Maintainer: Peter Baker <p.baker1@uq.edu.au>
 Description: Perform classic chi-squared tests and Ripol et al(1999)

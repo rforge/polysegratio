@@ -15,7 +15,7 @@ function(run.jags, quiet=TRUE, ...)
   ##                      quiet=quiet, ...)
   ##  x.jags <- mcmc.list(x.jags)
   ##} else {
-  x.jags <- read.openbugs(stem = run.jags$jags.control$stem, quiet=quiet, ...)
+  x.jags <- coda::read.openbugs(stem = run.jags$jags.control$stem, quiet=quiet, ...)
   ##}
   
   res <- list(run.jags=run.jags, mcmc.list=x.jags)
